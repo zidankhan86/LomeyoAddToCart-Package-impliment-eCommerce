@@ -140,7 +140,7 @@
             </a>
           </li>
 
-          @can('view product')
+          {{-- @can('view product') --}}
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="false" >
               <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -159,11 +159,11 @@
               </div>
             </div>
           </li>
-@endcan
+{{-- @endcan --}}
 
-@can('view category')
+{{-- @can('view category') --}}
           <li class="nav-item ">
-            <a class="nav-link" href="{{ route('category.list') }}"  data-bs-auto-close="false" role="button" aria-expanded="false" >
+            <a class="nav-link" href="{{ route('category.index') }}"  data-bs-auto-close="false" role="button" aria-expanded="false" >
               <span class="nav-link-icon d-md-none d-lg-inline-block">
                 <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-category"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 3h-6a1 1 0 0 0 -1 1v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1 -1v-6a1 1 0 0 0 -1 -1z" /><path d="M20 3h-6a1 1 0 0 0 -1 1v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1 -1v-6a1 1 0 0 0 -1 -1z" /><path d="M10 13h-6a1 1 0 0 0 -1 1v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1 -1v-6a1 1 0 0 0 -1 -1z" /><path d="M17 13a4 4 0 1 1 -3.995 4.2l-.005 -.2l.005 -.2a4 4 0 0 1 3.995 -3.8z" /></svg>
               </span>
@@ -172,9 +172,9 @@
               </span>
             </a>
           </li>
-          @endcan
+          {{-- @endcan --}}
 
-@can('view custom page')
+{{-- @can('view custom page') --}}
 
           <li class="nav-item ">
             <a class="nav-link" href="{{ route('custom.page.index') }}"  data-bs-auto-close="false" role="button" aria-expanded="false" >
@@ -187,9 +187,9 @@
             </a>
           </li>
 
-          @endcan
+          {{-- @endcan --}}
 
-          @can('view users')
+          {{-- @can('view users') --}}
           <li class="nav-item ">
             <a class="nav-link" href="{{ route('user.list') }}"  data-bs-auto-close="false" role="button" aria-expanded="false" >
               <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -200,7 +200,7 @@
               </span>
             </a>
           </li>
-          @endcan
+          {{-- @endcan --}}
 
 
           <li class="nav-item ">

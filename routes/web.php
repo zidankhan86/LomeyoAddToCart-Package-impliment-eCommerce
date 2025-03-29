@@ -71,6 +71,16 @@ Route::get('/custom/page', [CustomPageController::class,'index'])->name('custom.
 Route::get('/edit/{id}', [CustomPageController::class,'edit'])->name('custom.page.edit');
 Route::post('/update/{id}', [CustomPageController::class,'update'])->name('custom.page.update');
 
+Route::prefix('category')->name('category.')->group(function () {
+    Route::get('/index', [CategoryController::class, 'index'])->name('index');
+    Route::get('/create', [CategoryController::class, 'create'])->name('create');
+    Route::get('/edit/{id}', [CategoryController::class, 'edit'])->name('edit'); // Should be GET
+    Route::put('/update/{id}', [CategoryController::class, 'update'])->name('update'); // Use PUT/PATCH
+    Route::post('/store', [CategoryController::class, 'store'])->name('store'); // Added store route
+    Route::delete('/destroy/{id}', [CategoryController::class, 'destroy'])->name('destroy'); // For delete
+});
+
+
 //Product
 Route::get('/product', [ProductController::class,'create'])->name('product.create');
 Route::post('/product', [ProductController::class,'store'])->name('product.store');
