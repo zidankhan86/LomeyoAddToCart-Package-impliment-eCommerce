@@ -24,7 +24,7 @@
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $product->name }}</td>
-                            <td>{{ $product->price }}</td>
+                            <td>{{ $product->price }} &#2547;</td>
                             <td>
                                 <a href="{{ route('product.edit', $product->id) }}" class="btn btn-warning btn-sm">Edit</a>
                                 <!-- Add Delete Button if necessary -->

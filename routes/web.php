@@ -82,15 +82,14 @@ Route::prefix('category')->name('category.')->group(function () {
 
 
 //Product
-Route::get('/product', [ProductController::class,'create'])->name('product.create');
-Route::post('/product', [ProductController::class,'store'])->name('product.store');
-
-
-Route::get('/product/index', [ProductController::class,'index'])->name('products.index');
-Route::put('/product/update/{id}', [ProductController::class,'update'])->name('product.update');
-Route::get('/product/edit/{id}', [ProductController::class,'edit'])->name('product.edit');
-Route::delete('/product/delete/{id}', [ProductController::class,'store'])->name('product.destroy');
-
+Route::prefix('product')->name('product.')->group(function () {
+    Route::get('/create', [ProductController::class,'create'])->name('create');
+    Route::post('/store', [ProductController::class,'store'])->name('store');
+    Route::get('/index', [ProductController::class,'index'])->name('index');
+    Route::put('/update/{id}', [ProductController::class,'update'])->name('update');
+    Route::get('/edit/{id}', [ProductController::class,'edit'])->name('edit');
+    Route::delete('/delete/{id}', [ProductController::class,'store'])->name('destroy');
+});
 
 Route::get('/logout',[TestController::class,'logout'])->name('logout');
 Route::get('/form',[TestController::class,'form'])->name('form');

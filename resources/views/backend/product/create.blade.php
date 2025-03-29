@@ -1,3 +1,5 @@
+@extends('backend.layout.app')
+@section('content')
 <div class="col-12">
     <form class="card shadow-lg border-0" method="POST" action="{{ route('product.store') }}" enctype="multipart/form-data">
         @csrf
@@ -11,6 +13,20 @@
                         <input type="text" class="form-control border-2 border-primary" name="name" placeholder="Enter product name" required>
                     </div>
                 </div>
+
+                <!-- Category Selection -->
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label fw-bold">Category</label>
+                        <select class="form-control border-2 border-primary" name="category_id" required>
+                            <option value="" disabled selected>Select a category</option>
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
                 <!-- Price -->
                 <div class="col-md-6">
                     <div class="form-group">
@@ -18,32 +34,23 @@
                         <input type="number" class="form-control border-2 border-primary" name="price" placeholder="Enter price" step="0.01" min="0" required>
                     </div>
                 </div>
+
                 <!-- Image Upload -->
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label class="form-label fw-bold">Product Thubnail</label>
+                        <label class="form-label fw-bold">Product Thumbnail</label>
                         <input type="file" class="form-control border-2 border-primary" name="image" accept="image/*" required>
                         <small class="form-text text-muted">Upload a high-quality image (JPEG, PNG).</small>
                     </div>
                 </div>
 
-
                 <div class="col-md-6">
                     <div class="form-group">
                         <label class="form-label fw-bold">Product Images</label>
-                        <input
-                            type="file"
-                            class="form-control border-2 border-primary"
-                            name="images[]"
-                            accept="image/jpeg,image/png"
-                            multiple
-                            required
-                        >
+                        <input type="file" class="form-control border-2 border-primary" name="images[]" accept="image/jpeg,image/png" multiple required>
                         <small class="form-text text-muted">Upload high-quality images (JPEG, PNG).</small>
                     </div>
                 </div>
-
-
 
                 <!-- Description -->
                 <div class="col-md-12">
@@ -87,3 +94,4 @@
         border-color: #0056b3;
     }
 </style>
+@endsection
