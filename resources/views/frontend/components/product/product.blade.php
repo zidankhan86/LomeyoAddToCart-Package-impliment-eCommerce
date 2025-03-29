@@ -5,11 +5,8 @@
         <!-- Search Bar -->
         <div class="mb-4">
             <form method="GET" action="{{ route('product.page') }}" class="d-flex justify-content-center">
-                <input type="text"
-                       class="form-control me-2 w-50 shadow-sm"
-                       name="query"
-                       placeholder="Search for products..."
-                       value="{{ request('query') }}">
+                <input type="text" class="form-control me-2 w-50 shadow-sm" name="query"
+                    placeholder="Search for products..." value="{{ request('query') }}">
                 <button type="submit" class="btn btn-dark">
                     <i class="bi-search"></i> Search
                 </button>
@@ -20,48 +17,46 @@
         <!-- Product Grid -->
         <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
             @foreach ($products as $item)
-                <div class="col mb-5">
-                    <div class="card h-100 shadow-sm border-0">
-                        <!-- Product image-->
-                        <div class="product-image-container">
-                            <a href="{{route('product.details',$item->slug)}}"><img class="card-img-top" src="{{ url('/public/uploads/', $item->image) }}" alt="{{ $item->name }}" /></a>
+            <div class="col mb-5">
+                <div class="card h-100 shadow-sm border-0">
+                    <!-- Product image-->
+                    <div class="product-image-container position-relative">
+                        <a href="{{route('product.details',$item->slug)}}">
+                            <img class="card-img-top" src="{{ url('/public/uploads/', $item->image) }}" alt="{{ $item->name }}" />
+                        </a>
+                        <div class="position-absolute top-50 start-50 translate-middle">
+                            <button class="btn btn-primary btn-sm quick-view-btn rounded-pill px-3 shadow-sm"
+                            data-id="{{ $item->id }}"
+                            data-name="{{ $item->name }}"
+                            data-price="{{ number_format($item->price, 2) }}"
+                            data-image="{{ url('/public/uploads/', $item->image) }}"
+                            data-description="{{ $item->description }}"
+                            title="Quick View"
+                            aria-label="Quick view of {{ $item->name }}">
+                        <i class="bi bi-eye-fill me-1"></i> Quick View
+                    </button>
                         </div>
-                        <!-- Product details-->
-                        <div class="card-body p-4 text-center">
-                            <!-- Product name-->
-                            <h5 class="fw-bolder text-truncate" title="{{ $item->name }}">{{ $item->name }}</h5>
-                            <!-- Product price-->
-                            <p class="text-success fs-5 mb-1">BDT {{ number_format($item->price, 2) }}</p>
-                        </div>
+                    </div>
+                    <!-- Product details-->
+                    <div class="card-body p-4 text-center">
+                        <!-- Product name-->
+                        <h5 class="fw-bolder text-truncate" title="{{ $item->name }}">{{ $item->name }}</h5>
+                        <!-- Product price-->
+                        <p class="text-success fs-5 mb-1">BDT {{ number_format($item->price, 2) }}</p>
+                    </div>
+                    <!-- Product actions-->
+                    <div class="text-center">
                         <!-- Product actions-->
-                            <div class="text-center">
-                               <!-- Product actions-->
-                                <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-
-
-
-
-                                    <div class="d-flex justify-content-between">
-                                        <a class="btn btn-info btn-sm flex-grow-1 me-2" href="{{ route('cart.add', $item->id) }}">
-                                            <i class="bi bi-cart-check-fill"></i>
-
-                                        </a>
-                                        <button class="btn btn-warning btn-sm flex-grow-1 quick-view-btn"
-                                                data-id="{{ $item->id }}"
-                                                data-name="{{ $item->name }}"
-                                                data-price="{{ number_format($item->price, 2) }}"
-                                                data-image="{{ url('/public/uploads/', $item->image) }}"
-                                                data-description="{{ $item->description }}">
-                                                <i class="bi bi-eye-fill"></i>
-                                        </button>
-                                    </div>
-
-
+                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                            <div class="d-flex justify-content-between">
+                                <a class="btn btn-info btn-sm flex-grow-1 me-2" href="{{ route('cart.add', $item->id) }}">
+                                    <i class="bi bi-cart-check-fill"></i>
+                                </a>
                             </div>
-
                         </div>
                     </div>
                 </div>
+            </div>
             @endforeach
         </div>
 
@@ -71,7 +66,8 @@
 
 
 {{-- Quick View Modal --}}
-<div class="modal fade" id="productQuickViewModal" tabindex="-1" aria-labelledby="quickViewModalLabel" aria-hidden="true">
+<div class="modal fade" id="productQuickViewModal" tabindex="-1" aria-labelledby="quickViewModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
