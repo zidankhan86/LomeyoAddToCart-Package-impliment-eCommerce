@@ -17,6 +17,7 @@ use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\frontend\HomeController as FrontendHomeController;
+use App\Http\Controllers\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,7 +64,10 @@ Route::group(['middleware'=>'auth'],function(){
     Route::get('/cart', [CartController::class, 'showCart'])->name('cart.show');
     Route::get('/remove-from-cart/{product}', [CartController::class, 'removeFromCart'])->name('cart.remove');
     Route::get('/clear-cart', [CartController::class, 'clearCart'])->name('cart.clear');
+    Route::get('/checkout', [OrderController::class, 'checkout'])->name('checkout');
+    Route::post('/checkout/process', [OrderController::class, 'processOrder'])->name('checkout.process');
 
+    Route::get('/order/index', [OrderController::class, 'index'])->name('order.index');
 //Pages
 Route::get('/app',[HomeController::class,'index'])->name('app');
 

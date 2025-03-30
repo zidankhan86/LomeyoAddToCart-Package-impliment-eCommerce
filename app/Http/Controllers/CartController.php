@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use App\Models\Product;
+use App\Models\OrderItem;
 use Darryldecode\Cart\Cart;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
    public function addToCart($productId){
     $Product = Product::find($productId);
 
-    $userId = auth()->user()->id; 
+    $userId = auth()->user()->id;
 
     // Add the product to the cart
     \Cart::session($userId)->add(array(
@@ -84,5 +87,9 @@ class CartController extends Controller
 
        return redirect()->route('cart.show')->with('success', 'Cart cleared successfully.');
    }
+
+
+   
+
 
 }
