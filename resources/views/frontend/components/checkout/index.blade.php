@@ -97,15 +97,34 @@
                                 </li>
                             </ul>
 
-                            <!-- Payment Method -->
+                         <!-- Payment Method -->
                             <h5>Payment Method</h5>
                             <div class="mb-3">
-                                <select name="payment_method" class="form-control" required>
-                                    <option value="paypal">PayPal</option>
-                                    <option value="stripe">Stripe</option>
-                                    <option value="cod">Cash on Delivery</option>
-                                </select>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="payment_method" id="paypal" value="paypal" checked>
+                                    <label class="form-check-label" for="paypal">
+                                        <img src="https://www.paypalobjects.com/webstatic/mktg/Logo/pp-logo-100px.png" alt="PayPal Logo" style="height: 20px;">
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="payment_method" id="stripe" value="stripe">
+                                    <label class="form-check-label" for="stripe">
+                                        <img src="https://stripe.com/img/v3/home/twitter.png" alt="Stripe Logo" style="height: 20px;">
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="payment_method" id="cod" value="cod">
+                                    <label class="form-check-label" for="cod">
+                                        Cash on Delivery
+                                    </label>
+                                </div>
                             </div>
+
+                            @if($errors->any())
+                                <div class="alert alert-danger">
+                                    {{ $errors->first() }}
+                                </div>
+                            @endif
 
                             <button type="submit" class="btn btn-success w-100">Place Order</button>
                         </div>
@@ -113,6 +132,19 @@
                 </div>
             </div>
         </form>
+
+        <!-- Hidden PayPal Form -->
+        {{-- <form id="paypal-form" action="{{ route('processPaypalPayment') }}" method="POST" style="display: none;">
+            @csrf
+            <input type="hidden" name="name" id="paypal-name">
+            <input type="hidden" name="email" id="paypal-email">
+            <input type="hidden" name="street" id="paypal-street">
+            <input type="hidden" name="zipcode" id="paypal-zipcode">
+            <input type="hidden" name="phone" id="paypal-phone">
+            <input type="hidden" name="note" id="paypal-note">
+            <input type="hidden" name="payment_method" value="paypal">
+        </form> --}}
+
     </div>
 </div>
 

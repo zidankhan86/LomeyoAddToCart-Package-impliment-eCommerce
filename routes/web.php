@@ -7,6 +7,8 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\AboutController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PayPalController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
@@ -17,7 +19,7 @@ use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\frontend\HomeController as FrontendHomeController;
-use App\Http\Controllers\OrderController;
+use App\Http\Controllers\frontend\OrderController as FrontendOrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -64,8 +66,8 @@ Route::group(['middleware'=>'auth'],function(){
     Route::get('/cart', [CartController::class, 'showCart'])->name('cart.show');
     Route::get('/remove-from-cart/{product}', [CartController::class, 'removeFromCart'])->name('cart.remove');
     Route::get('/clear-cart', [CartController::class, 'clearCart'])->name('cart.clear');
-    Route::get('/checkout', [OrderController::class, 'checkout'])->name('checkout');
-    Route::post('/checkout/process', [OrderController::class, 'processOrder'])->name('checkout.process');
+    Route::get('/checkout', [FrontendOrderController::class, 'checkout'])->name('checkout');
+    Route::post('/checkout/process', [FrontendOrderController::class, 'processOrder'])->name('checkout.process');
 
     Route::get('/order/index', [OrderController::class, 'index'])->name('order.index');
 //Pages
@@ -94,6 +96,11 @@ Route::prefix('product')->name('product.')->group(function () {
     Route::get('/edit/{id}', [ProductController::class,'edit'])->name('edit');
     Route::delete('/delete/{id}', [ProductController::class,'store'])->name('destroy');
 });
+
+
+Route::get('/checkout/process', [FrontendOrderController::class, 'processPaypalPayment'])->name('processPaypalPayment');
+Route::get('/paypal/success', [FrontendOrderController::class, 'paypalSuccess'])->name('paypal.success');
+Route::get('/paypal/cancel', [FrontendOrderController::class, 'paypalCancel'])->name('paypal.cancel');
 
 Route::get('/logout',[TestController::class,'logout'])->name('logout');
 Route::get('/form',[TestController::class,'form'])->name('form');
