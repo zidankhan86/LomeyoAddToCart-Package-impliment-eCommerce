@@ -19,10 +19,12 @@ return new class extends Migration
             $table->string('street');
             $table->string('zipcode');
             $table->string('phone');
+            $table->string('transaction_id')->nullable();
+            $table->string('currency')->default('USD');
             $table->text('note')->nullable();
-            $table->enum('payment_method', ['cod', 'stripe', 'paypal']);
+            $table->enum('payment_method', ['cod', 'stripe', 'paypal','sslcommerze']);
             $table->decimal('total_price', 10, 2);
-            $table->enum('status', ['pending', 'processing', 'completed', 'cancelled'])->default('pending');
+            $table->string('status')->default('pending');
             $table->timestamps();
         });
     }

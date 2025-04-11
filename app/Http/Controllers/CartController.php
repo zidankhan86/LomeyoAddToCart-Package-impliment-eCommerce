@@ -24,6 +24,7 @@ class CartController extends Controller
         'quantity' => 1, // Set the initial quantity as 1
         'attributes' => array(),
         'associatedModel' => $Product
+
     ));
 
         return back()->with('success','Product added to the cart');
@@ -48,6 +49,25 @@ class CartController extends Controller
        return redirect()->back()->with('success', 'Product removed from cart.');
    }
 
+   public function updateCart(Request $request, $productId)
+{
+    $userId = auth()->user()->id;
+
+    // Validate quantity
+    $request->validate([
+        'quantity' => 'required|integer|min:1|max:10',
+    ]);
+
+    // Update the quantity directly (replace, not add)
+    \Cart::session($userId)->update($productId, [
+        'quantity' => [
+            'relative' => false, // false = set new quantity instead of adding
+            'value' => $request->quantity,
+        ],
+    ]);
+
+    return back()->with('success', 'Cart updated successfully!');
+}
 
    public function showCart()
    {
@@ -71,6 +91,7 @@ class CartController extends Controller
                 foreach ($cartContents as $item) {
             $itemTotalPrice = $item->price * $item->quantity;
             $totalPrice += $itemTotalPrice;
+            $image = $item->image;
         }
 
        return view('frontend.pages.addToCart', compact('cartContents','userId','subTotal','total','totalPrice'));
@@ -89,7 +110,7 @@ class CartController extends Controller
    }
 
 
-   
+
 
 
 }

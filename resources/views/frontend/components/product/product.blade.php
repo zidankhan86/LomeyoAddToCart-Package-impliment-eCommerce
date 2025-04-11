@@ -1,5 +1,5 @@
 <section class="py-5">
-    <div class="container px-4 px-lg-5 mt-5">
+    <div class="container px-4 px-lg-5 mt-2">
         <h2 class="text-center fw-bold mb-4">Our Products</h2>
 
         <!-- Search Bar -->
@@ -15,7 +15,7 @@
 
 
         <!-- Product Grid -->
-        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+        <div class="row gx-4 gx-lg-5 mt-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
             @foreach ($products as $item)
             <div class="col mb-5">
                 <div class="card h-100 shadow-sm border-0">
@@ -25,7 +25,7 @@
                             <img class="card-img-top" src="{{ url('/public/uploads/', $item->image) }}" alt="{{ $item->name }}" />
                         </a>
                         <div class="position-absolute top-50 start-50 translate-middle">
-                            <button class="btn btn-primary btn-sm quick-view-btn rounded-pill px-3 shadow-sm"
+                            <button class="btn btn-dark btn-sm quick-view-btn rounded-pill px-3 shadow-sm"
                             data-id="{{ $item->id }}"
                             data-name="{{ $item->name }}"
                             data-price="{{ number_format($item->price, 2) }}"
@@ -49,7 +49,7 @@
                         <!-- Product actions-->
                         <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
                             <div class="d-flex justify-content-between">
-                                <a class="btn btn-info btn-sm flex-grow-1 me-2" href="{{ route('cart.add', $item->id) }}">
+                                <a class="btn btn-dark btn-sm flex-grow-1 me-2" href="{{ route('cart.add', $item->id) }}">
                                     <i class="bi bi-cart-check-fill"></i>
                                 </a>
                             </div>

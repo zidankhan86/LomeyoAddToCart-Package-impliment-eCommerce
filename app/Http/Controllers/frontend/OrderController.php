@@ -351,7 +351,7 @@ class OrderController extends Controller
                 'total_price' => $orderData['total_price'],
                 'status' => 'paid',
                 'currency' => 'usd',
-                'payment_id' => $session->payment_intent,
+                'transaction_id' => $session->payment_intent,
             ]);
 
             foreach ($orderData['cart_contents'] as $item) {
@@ -483,7 +483,7 @@ public function success(Request $request)
         if ($order) {
             $order->update([
                 'status' => 'completed',
-                'payment_id' => $tran_id
+                'transaction_id' => $tran_id
             ]);
 
             // Clear cart
