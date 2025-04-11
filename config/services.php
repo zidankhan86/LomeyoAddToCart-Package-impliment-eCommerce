@@ -48,4 +48,10 @@ return [
     'validate_ssl'   => env('PAYPAL_VALIDATE_SSL', true),
 ],
 
+'stripe' => [
+    'key' => env('STRIPE_KEY'),
+    'secret' => env('STRIPE_SECRET'),
+],
+
+
 ];

@@ -56,13 +56,15 @@ class OrderController extends Controller
         $totalPrice = \Cart::session($userId)->getTotal();
 
         if ($request->payment_method === 'stripe') {
-            $paymentSuccess = $this->processStripePayment($request, $totalPrice);
+            // Store order data in session before Stripe redirect
+            session()->put('order_data', [
+                'user_id' => $userId,
+                'billing' => $request->except('_token'),
+                'cart_contents' => $cartContents,
+                'total_price' => $totalPrice
+            ]);
 
-            if ($paymentSuccess) {
-                return redirect($paymentSuccess);
-            } else {
-                return redirect()->back()->with('error', 'Stripe Payment failed. Please try again.');
-            }
+            return $this->processStripePayment($totalPrice, $request->email);
         }
 
         if ($request->payment_method === 'paypal') {
@@ -77,6 +79,7 @@ class OrderController extends Controller
             // Remove $request parameter since we only need the amount
             return $this->processPaypalPayment($totalPrice);
         }
+
 
         if ($request->payment_method === 'cod') {
             $order = $this->checkoutProcessCOD($request, $totalPrice);
@@ -241,4 +244,133 @@ class OrderController extends Controller
             ->route('checkout')
             ->with('error', 'You have cancelled the PayPal payment.');
     }
+
+
+
+    private function processStripePayment($totalPrice, $customerEmail)
+{
+    \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
+
+    try {
+        $userId = auth()->id();
+        $cartContents = \Cart::session($userId)->getContent();
+
+        // Convert cart contents to array to avoid Closure serialization issue
+        $cartArray = $cartContents->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'name' => $item->name,
+                'price' => $item->price,
+                'quantity' => $item->quantity,
+                'attributes' => $item->attributes,
+            ];
+        })->values()->toArray();
+
+        // Store order data in session
+        $orderData = [
+            'user_id' => $userId,
+            'billing' => [
+                'name' => request('name'),
+                'email' => $customerEmail,
+                'street' => request('street'),
+                'zipcode' => request('zipcode'),
+                'phone' => request('phone'),
+                'note' => request('note'),
+            ],
+            'total_price' => $totalPrice,
+            'cart_contents' => $cartArray,
+        ];
+
+        session()->put('order_data', $orderData);
+
+        // Create Stripe Checkout Session
+        $session = \Stripe\Checkout\Session::create([
+            'payment_method_types' => ['card'],
+            'line_items' => $this->getLineItems($cartContents),
+            'mode' => 'payment',
+            'customer_email' => $customerEmail,
+            'success_url' => route('stripe.success') . '?session_id={CHECKOUT_SESSION_ID}',
+            'cancel_url' => route('stripe.cancel'),
+        ]);
+
+        return redirect($session->url);
+    } catch (\Exception $e) {
+        return redirect()->back()->with('error', 'Stripe Error: ' . $e->getMessage());
+    }
+}
+
+    private function getLineItems($cartContents)
+    {
+        return $cartContents->map(function ($item) {
+            return [
+                'price_data' => [
+                    'currency' => 'usd',
+                    'product_data' => [
+                        'name' => $item->name,
+                    ],
+                    'unit_amount' => intval($item->price * 100),
+                ],
+                'quantity' => $item->quantity,
+            ];
+        })->values()->toArray();
+    }
+
+
+    public function success(Request $request)
+    {
+        if (!$request->session_id) {
+            return redirect()->route('stripe.cancel');
+        }
+
+        try {
+            $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
+            $session = $stripe->checkout->sessions->retrieve($request->session_id);
+
+            $orderData = session()->get('order_data');
+
+            if (!$orderData) {
+                return redirect()->route('checkout')->with('error', 'Session expired or missing order data.');
+            }
+
+            $order = Order::create([
+                'user_id' => $orderData['user_id'],
+                'name' => $orderData['billing']['name'],
+                'email' => $orderData['billing']['email'],
+                'street' => $orderData['billing']['street'],
+                'zipcode' => $orderData['billing']['zipcode'],
+                'phone' => $orderData['billing']['phone'],
+                'note' => $orderData['billing']['note'],
+                'payment_method' => 'stripe',
+                'total_price' => $orderData['total_price'],
+                'status' => 'paid',
+                'currency' => 'usd',
+                'payment_id' => $session->payment_intent,
+            ]);
+
+            foreach ($orderData['cart_contents'] as $item) {
+                OrderItem::create([
+                    'order_id' => $order->id,
+                    'product_id' => $item['id'],
+                    'product_name' => $item['name'],
+                    'product_price' => $item['price'],
+                    'quantity' => $item['quantity'],
+                    'attributes' => json_encode($item['attributes']),
+                ]);
+            }
+
+
+            \Cart::session($orderData['user_id'])->clear();
+            session()->forget('order_data');
+
+            return redirect()->route('home')->with('success', 'Payment successful! Your order has been placed.');
+        } catch (\Exception $e) {
+            return redirect()->route('checkout')->with('error', 'Stripe error: ' . $e->getMessage());
+        }
+    }
+    public function stripeCancel()
+    {
+        return redirect()->route('checkout')->with('error', 'Payment was canceled. Please try again.');
+    }
+
+
 }

@@ -9,6 +9,7 @@ use App\Http\Controllers\TestController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PayPalController;
+use App\Http\Controllers\StripeController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
@@ -102,6 +103,10 @@ Route::get('/checkout/process', [FrontendOrderController::class, 'processPaypalP
 Route::get('/paypal/success', [FrontendOrderController::class, 'paypalSuccess'])->name('paypal.success');
 Route::get('/paypal/cancel', [FrontendOrderController::class, 'paypalCancel'])->name('paypal.cancel');
 
+Route::post('/stripe-purchase', [FrontendOrderController::class, 'processStripePayment'])->name('purchase');
+Route::get('/payment-success', [FrontendOrderController::class, 'success'])->name('stripe.success');
+Route::get('/payment-cancel', [FrontendOrderController::class, 'index'])->name('stripe.cancel');
+
 Route::get('/logout',[TestController::class,'logout'])->name('logout');
 Route::get('/form',[TestController::class,'form'])->name('form');
 Route::get('/setting',[SettingController::class,'index'])->name('setting');
@@ -110,8 +115,7 @@ Route::post('/update-password/{id}',[ChangePasswordController::class,'update'])-
 Route::get('/user-list',[AuthController::class,'list'])->name('user.list');
 Route::get('/category-list',[CategoryController::class,'list'])->name('category.list');
 Route::get('/category-form',[CategoryController::class,'form'])->name('category.form');
-Route::get('/blog-list',[BlogController::class,'list'])->name('blog.list');
-Route::get('/blog-form',[BlogController::class,'form'])->name('blog.form');
+
 
 //profile
 Route::get('/profile',[ProfileController::class,'index'])->name('profile');
