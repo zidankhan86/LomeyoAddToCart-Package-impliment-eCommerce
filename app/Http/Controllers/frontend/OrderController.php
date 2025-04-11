@@ -1,13 +1,14 @@
 <?php
 
 namespace App\Http\Controllers\frontend;
-use Srmklive\PayPal\Services\PayPal as PayPalClient;
 use App\Models\Order;
 use App\Models\OrderItem;
 use Darryldecode\Cart\Cart;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Library\SslCommerz\SslCommerzNotification;
+use Srmklive\PayPal\Services\PayPal as PayPalClient;
 
 class OrderController extends Controller
 {
@@ -49,7 +50,7 @@ class OrderController extends Controller
             'note'           => 'nullable|string|max:500',
             'payment_method' => 'required',
         ]);
-
+// dd($request->all());
         $userId = auth()->id();
         $cartContents = \Cart::session($userId)->getContent();
         $subtotal = \Cart::session($userId)->getSubTotal();
@@ -79,6 +80,12 @@ class OrderController extends Controller
             // Remove $request parameter since we only need the amount
             return $this->processPaypalPayment($totalPrice);
         }
+
+
+        if ($request->payment_method === 'sslcommerze') {
+            return $this->processSslPayment($request, $totalPrice);
+        }
+
 
 
         if ($request->payment_method === 'cod') {
@@ -316,7 +323,7 @@ class OrderController extends Controller
     }
 
 
-    public function success(Request $request)
+    public function StripeSuccess(Request $request)
     {
         if (!$request->session_id) {
             return redirect()->route('stripe.cancel');
@@ -372,5 +379,159 @@ class OrderController extends Controller
         return redirect()->route('checkout')->with('error', 'Payment was canceled. Please try again.');
     }
 
+
+
+    public function processSslPayment(Request $request, $totalPrice)
+{
+    $userId = auth()->id();
+    $cartContents = \Cart::session($userId)->getContent();
+
+    // Generate a unique transaction ID
+    $transactionId = 'SSL'.time().rand(1000,9999);
+
+    // Create order first with pending status
+    $order = Order::create([
+        'user_id'        => $userId,
+        'name'           => $request->name,
+        'email'          => $request->email,
+        'street'         => $request->street,
+        'zipcode'        => $request->zipcode,
+        'phone'          => $request->phone,
+        'note'           => $request->note ?? null,
+        'payment_method' => 'sslcommerze',
+        'total_price'    => $totalPrice,
+        'status'         => 'pending',
+        'transaction_id' => $transactionId,
+        'currency'       => 'BDT'
+    ]);
+
+    // Create order items
+    foreach ($cartContents as $item) {
+        OrderItem::create([
+            'order_id'      => $order->id,
+            'product_id'    => $item->id,
+            'product_name'  => $item->name,
+            'product_price' => $item->price,
+            'quantity'      => $item->quantity,
+            'attributes'    => json_encode($item->attributes)
+        ]);
+    }
+
+    // Prepare data for SSLCOMMERZ
+    $post_data = [
+        'total_amount' => $totalPrice,
+        'currency' => "BDT",
+        'tran_id' => $transactionId,
+        'cus_name' => $request->name,
+        'cus_email' => $request->email,
+        'cus_add1' => $request->street,
+        'cus_add2' => "",
+        'cus_city' => "",
+        'cus_state' => "",
+        'cus_postcode' => $request->zipcode,
+        'cus_country' => "Bangladesh",
+        'cus_phone' => $request->phone,
+        'cus_fax' => "",
+        'ship_name' => $request->name,
+        'ship_add1' => $request->street,
+        'ship_add2' => "",
+        'ship_city' => "",
+        'ship_state' => "",
+        'ship_postcode' => $request->zipcode,
+        'ship_country' => "Bangladesh",
+        'shipping_method' => "NO",
+        'product_name' => "Online Purchase",
+        'product_category' => "Goods",
+        'product_profile' => "general",
+        'value_a' => $order->id, // Store order ID for callback
+        'success_url' => route('sslcommerz.success'),
+        'fail_url' => route('fail'),
+        'cancel_url' => route('cancel'),
+    ];
+
+    // Initiate SSLCOMMERZ Payment
+    $sslc = new SslCommerzNotification();
+    $payment_options = $sslc->makePayment($post_data, 'hosted');
+
+    if (!is_array($payment_options)) {
+        $order->update(['status' => 'failed']);
+        return redirect()->route('home')->with('error', 'Failed to initialize SSLCommerz payment.');
+    }
+
+    // Store order ID in session for later reference
+    session()->put('current_order_id', $order->id);
+
+    // Redirect to SSLCommerz payment page
+    return redirect()->away($payment_options['GatewayPageURL']);
+}
+
+public function success(Request $request)
+{
+    $tran_id = $request->input('tran_id');
+    $amount = $request->input('amount');
+    $currency = $request->input('currency');
+    $order_id = $request->input('value_a'); // Get order ID from callback
+
+    $sslc = new SslCommerzNotification();
+
+    // Validate the payment
+    $validation = $sslc->orderValidate($request->all(), $tran_id, $amount, $currency);
+
+    if ($validation) {
+        // Update order status
+        $order = Order::find($order_id);
+        if ($order) {
+            $order->update([
+                'status' => 'completed',
+                'payment_id' => $tran_id
+            ]);
+
+            // Clear cart
+            \Cart::session($order->user_id)->clear();
+            session()->forget('current_order_id');
+
+            return redirect()
+                ->route('home')
+                ->with('success', 'Payment successful! Order #'.$order->id.' has been placed.');
+        }
+    }
+
+    // If validation fails
+    return redirect()
+        ->route('home')
+        ->with('error', 'Payment validation failed. Please contact support.');
+}
+
+public function fail(Request $request)
+{
+    $tran_id = $request->input('tran_id');
+    $order_id = $request->input('value_a');
+
+    // Update order status to failed
+    if ($order_id) {
+        Order::where('id', $order_id)
+            ->update(['status' => 'failed']);
+    }
+
+    return redirect()
+        ->route('home')
+        ->with('error', 'Payment failed. Please try again.');
+}
+
+public function cancel(Request $request)
+{
+    $tran_id = $request->input('tran_id');
+    $order_id = $request->input('value_a');
+
+    // Update order status to canceled
+    if ($order_id) {
+        Order::where('id', $order_id)
+            ->update(['status' => 'canceled']);
+    }
+
+    return redirect()
+        ->route('home')
+        ->with('error', 'Payment was canceled. You can try again.');
+}
 
 }

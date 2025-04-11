@@ -19,6 +19,7 @@ use App\Http\Controllers\CustomPageController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\RolePermissionController;
+use App\Http\Controllers\SslCommerzPaymentController;
 use App\Http\Controllers\frontend\HomeController as FrontendHomeController;
 use App\Http\Controllers\frontend\OrderController as FrontendOrderController;
 
@@ -43,23 +44,24 @@ Route::get('/about', [CustomPageController::class,'about'])->name('about.page');
 
 Route::get('/product/page',[FrontendHomeController::class,'product'])->name('product.page');
 Route::get('/product/details/{slug}',[FrontendHomeController::class,'details'])->name('product.details');
-Route::get('/blog',[BlogController::class,'index'])->name('blog');
 Route::get('/contact',[ContactController::class,'index'])->name('contact');
 Route::get('/category',[CategoryController::class,'index'])->name('category');
 
 Route::get('/products/cart', [ProductController::class,'cart'])->name('cart');
 
 
-//Auth
+//Auth//Register
 Route::get('/login',[AuthController::class,'index'])->name('login');
 Route::post('/store',[AuthController::class,'store'])->name('store');
-
-//Register
 Route::get('/registration',[RegistrationController::class,'index'])->name('registration');
 Route::post('/registration/store',[RegistrationController::class,'store'])->name('registration.store');
 
-//Backend
 
+
+//Backend
+Route::post('/success', [FrontendOrderController::class, 'success'])->name('sslcommerz.success');
+Route::post('/fail', [FrontendOrderController::class, 'fail'])->name('fail');
+Route::post('/cancel', [FrontendOrderController::class, 'cancel'])->name('cancel');
 //Middleware
 Route::group(['middleware'=>'auth'],function(){
 
@@ -104,8 +106,11 @@ Route::get('/paypal/success', [FrontendOrderController::class, 'paypalSuccess'])
 Route::get('/paypal/cancel', [FrontendOrderController::class, 'paypalCancel'])->name('paypal.cancel');
 
 Route::post('/stripe-purchase', [FrontendOrderController::class, 'processStripePayment'])->name('purchase');
-Route::get('/payment-success', [FrontendOrderController::class, 'success'])->name('stripe.success');
+Route::get('/payment-success', [FrontendOrderController::class, 'StripeSuccess'])->name('stripe.success');
 Route::get('/payment-cancel', [FrontendOrderController::class, 'index'])->name('stripe.cancel');
+
+
+
 
 Route::get('/logout',[TestController::class,'logout'])->name('logout');
 Route::get('/form',[TestController::class,'form'])->name('form');
