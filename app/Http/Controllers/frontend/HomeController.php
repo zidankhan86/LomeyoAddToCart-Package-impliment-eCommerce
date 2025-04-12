@@ -44,5 +44,12 @@ class HomeController extends Controller
         return view('frontend.components.product.details',$data);
     }
 
-    
+
+    public function latestProduct(){
+
+        $data['latestProducts'] = Product::latest()->take(12)->get();
+
+        return view('frontend.new_arrival.index',$data);
+    }
+
 }

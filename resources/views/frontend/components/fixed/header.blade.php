@@ -1,37 +1,62 @@
-<nav class="navbar navbar-expand-lg" style="background: linear-gradient(90deg, #c42f81, #feb47b); box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+<nav class="navbar navbar-expand-lg sticky-top" style="background: linear-gradient(90deg, #c42f81, #feb47b); box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
     <div class="container px-4 px-lg-5">
         <!-- Logo with Link -->
-        <a class="navbar-brand text-white fw-bold" href="{{ route('home') }}">
-            <img src="{{ asset('l.png') }}" alt="{{ config('app.name') }}" style="height: 40px;">
+        <a class="navbar-brand text-white fw-bold d-flex align-items-center" href="{{ route('home') }}">
+            <img src="{{ asset('l.png') }}" style="height: 40px;" class="me-2">
+
         </a>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+        <!-- Toggle for mobile -->
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon text-white"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <!-- Nav Links -->
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                <li class="nav-item"><a class="nav-link text-white fw-semibold" href="{{ route('home') }}">Home</a></li>
-                <li class="nav-item"><a class="nav-link text-white fw-semibold" href="{{ route('about.page') }}">About</a></li>
-                <li class="nav-item"><a class="nav-link text-white fw-semibold" href="{{ route('product.page') }}">Product</a></li>
+                <li class="nav-item">
+                    <a class="nav-link text-white fw-semibold {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white fw-semibold {{ request()->routeIs('about.page') ? 'active' : '' }}" href="{{ route('about.page') }}">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white fw-semibold {{ request()->routeIs('product.page') ? 'active' : '' }}" href="{{ route('product.page') }}">Product</a>
+                </li>
+
+                <!-- Shop Dropdown -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle text-white fw-semibold" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Shop</a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="">All Products</a></li>
-                        <li><hr class="dropdown-divider" /></li>
-                        <li><a class="dropdown-item" href="#!">Popular Items</a></li>
-                        <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
+                    <a class="nav-link dropdown-toggle text-white fw-semibold" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Shop
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3 p-2">
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center py-2" href="{{ route('product.page') }}">
+                                <i class="bi bi-bag me-2 text-primary"></i> All Products
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center py-2" href="#">
+                                <i class="bi bi-star-fill me-2 text-warning"></i> Popular Items
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center py-2" href="{{ route('latestProduct') }}">
+                                <i class="bi bi-lightning-fill me-2 text-danger"></i> New Arrivals
+                            </a>
+                        </li>
                     </ul>
                 </li>
             </ul>
 
             <!-- Cart Button -->
-            <div class="d-flex">
-                <a href="{{ route('cart.show') }}" class="btn btn-light text-dark position-relative">
+            <div class="d-flex align-items-center">
+                <a href="{{ route('cart.show') }}" class="btn btn-light text-dark position-relative rounded-pill px-3">
                     <i class="bi bi-cart-fill me-1"></i> Cart
-                    <span class="badge bg-dark text-white ms-1 rounded-pill position-absolute top-0 start-100 translate-middle">
+                    <span class="badge bg-dark text-white position-absolute top-0 start-100 translate-middle rounded-pill px-2 py-1">
                         @auth
                             {{ Cart::session(auth()->user()->id)->getTotalQuantity() }}
                         @else
