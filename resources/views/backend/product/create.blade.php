@@ -60,6 +60,34 @@
                     </div>
                 </div>
             </div>
+
+<div class="row my-4">
+                <!-- Status -->
+<div class="col-md-6">
+    <div class="form-group">
+        <label class="form-label fw-bold">Status</label>
+        <select class="form-control border-2 border-primary" name="status" required>
+            <option value="" disabled selected>Select status</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+        </select>
+    </div>
+</div>
+
+<!-- Is Popular -->
+<div class="col-md-6">
+    <div class="form-group">
+        <label class="form-label fw-bold">Is Popular</label>
+        <select class="form-control border-2 border-primary" name="is_popular" required>
+            <option value="" disabled selected>Is this product popular?</option>
+            <option value="1">Yes</option>
+            <option value="0">No</option>
+        </select>
+    </div>
+</div>
+
+</div>
+
         </div>
         <div class="card-footer text-end bg-light">
             <button type="submit" class="btn btn-primary px-4">Create</button>

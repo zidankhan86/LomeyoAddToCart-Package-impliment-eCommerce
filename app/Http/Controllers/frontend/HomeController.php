@@ -14,7 +14,7 @@ class HomeController extends Controller
     public function index()
     {
 
-        $products = Product::all();
+        $products = Product::where('status','active')->get();
 
         return view('frontend.pages.home',compact('products'));
     }
@@ -28,7 +28,7 @@ class HomeController extends Controller
                 ->orWhere('description', 'LIKE', "%{$query}%")
                 ->get();
         } else {
-            $products = Product::all();
+            $products = Product::where('status','active')->get();
         }
         return view('frontend.pages.product', compact('products', 'query'));
     }
@@ -47,9 +47,16 @@ class HomeController extends Controller
 
     public function latestProduct(){
 
-        $data['latestProducts'] = Product::latest()->take(12)->get();
+        $data['latestProducts'] = Product::where('status','active')->latest()->take(12)->get();
 
         return view('frontend.new_arrival.index',$data);
+    }
+
+    public function popularProduct(){
+
+        $data['popularProducts'] = Product::where('status','active') ->where('is_popular', 1)->get();
+
+        return view('frontend.popular_product.index',$data);
     }
 
 }

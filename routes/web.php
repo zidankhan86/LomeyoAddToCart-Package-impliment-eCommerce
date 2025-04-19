@@ -38,8 +38,8 @@ use App\Http\Controllers\frontend\OrderController as FrontendOrderController;
 
 //Pages
 Route::get('/',[FrontendHomeController::class,'index'])->name('home');
-Route::get('/latest_product',[FrontendHomeController::class,'latestProduct'])->name('latestProduct');
-
+Route::get('/latest-product',[FrontendHomeController::class,'latestProduct'])->name('latestProduct');
+Route::get('/popular-product',[FrontendHomeController::class,'popularProduct'])->name('popularProduct');
 Route::get('/about', [CustomPageController::class,'about'])->name('about.page');
 
 

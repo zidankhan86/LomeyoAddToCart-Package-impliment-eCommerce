@@ -32,6 +32,8 @@ class ProductController extends Controller
             'price' => 'required|numeric',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif',
             'description' => 'required',
+            'status'=>'required',
+            'is_popular' =>'required'
         ]);
 
         $imageName = null;
@@ -46,8 +48,10 @@ class ProductController extends Controller
         $product->category_id = $request->category_id;
         $product->slug = Str::slug($request->name);
         $product->price = $request->price;
-        $product->image = $imageName;
+        $product->image = '/public/uploads/' .$imageName;
         $product->description = $request->description;
+        $product->is_popular = $request->is_popular;
+        $product->status = $request->status;
 
         $product->save();
 
@@ -114,14 +118,15 @@ class ProductController extends Controller
         $request->file('image')->storeAs('uploads', $imageName, 'public');
 
         // Update the product's image field
-        $product->image = $imageName;
+        $product->image = '/public/uploads/'.$imageName;
     }
 
     // Update the product's other fields
     $product->name = $request->input('name');
     $product->price = $request->input('price');
     $product->description = $request->input('description');
-
+    $product->status = $request->input('status');
+    $product->is_popular = $request->input('is_popular');
     // Save the updated product to the database
     $product->save();
 
@@ -132,7 +137,7 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Product $product)
+    public function destroy($id)
     {
         //
     }

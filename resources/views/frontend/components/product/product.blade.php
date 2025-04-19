@@ -1,6 +1,16 @@
 <section class="py-5">
     <div class="container px-4 px-lg-5 mt-2">
+        <!-- Ad Banner -->
+        <div class="mb-5 text-center">
+            <a href="#">
+                <img src="{{ asset('image.png') }}" alt="Ad Banner" class="img-fluid rounded shadow-sm"
+                    style="max-height: 300px;">
+            </a>
+        </div>
+
+
         <h2 class="text-center fw-bold mb-4">Our Products</h2>
+
 
         <!-- Search Bar -->
         <div class="mb-4">
@@ -22,19 +32,20 @@
                     <!-- Product image-->
                     <div class="product-image-container position-relative">
                         <a href="{{route('product.details',$item->slug)}}">
-                            <img class="card-img-top" src="{{ url('/public/uploads/', $item->image) }}" alt="{{ $item->name }}" />
+                            <img class="card-img-top" src="{{ url('/public/uploads/', $item->image) }}"
+                                alt="{{ $item->name }}" />
                         </a>
                         <div class="position-absolute top-50 start-50 translate-middle">
                             <button class="btn btn-dark btn-sm quick-view-btn rounded-pill px-3 shadow-sm"
-                            data-id="{{ $item->id }}"
-                            data-name="{{ $item->name }}"
-                            data-price="{{ number_format($item->price, 2) }}"
-                            data-image="{{ url('/public/uploads/', $item->image) }}"
-                            data-description="{{ $item->description }}"
-                            title="Quick View"
-                            aria-label="Quick view of {{ $item->name }}">
-                        <i class="bi bi-eye-fill me-1"></i> Quick View
-                    </button>
+                                data-id="{{ $item->id }}" data-name="{{ $item->name }}"
+                                data-price="{{ number_format($item->price, 2) }}"
+                                data-image="{{ url('/public/uploads/', $item->image) }}"
+                                data-description="{{ $item->description }}" title="Quick View"
+                                aria-label="Quick view of {{ $item->name }}"
+                                style="display: inline-flex; align-items: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                <i class="bi bi-eye-fill me-1"></i> Quick View
+                            </button>
+
                         </div>
                     </div>
                     <!-- Product details-->
@@ -49,7 +60,8 @@
                         <!-- Product actions-->
                         <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
                             <div class="d-flex justify-content-between">
-                                <a class="btn btn-dark btn-sm flex-grow-1 me-2" href="{{ route('cart.add', $item->id) }}">
+                                <a class="btn btn-dark btn-sm flex-grow-1 me-2"
+                                    href="{{ route('cart.add', $item->id) }}">
                                     <i class="bi bi-cart-check-fill"></i>
                                 </a>
                             </div>
