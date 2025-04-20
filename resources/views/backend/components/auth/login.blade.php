@@ -15,7 +15,7 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
     <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
-    <title>Lomeyo Login</title>
+    <title>Fake Shop Login</title>
     <!-- CSS files -->
     <link href="./dist/css/tabler.min.css?1684106062" rel="stylesheet"/>
     <link href="./dist/css/tabler-flags.min.css?1684106062" rel="stylesheet"/>
@@ -94,7 +94,7 @@
           </div>
         </div>
         <div class="text-center text-muted mt-3">
-          Don't have account yet? <a href="./sign-up.html" tabindex="-1">Sign up</a>
+          Don't have account yet? <a href="{{route('registration')}}" tabindex="-1">Sign up</a>
         </div>
       </div>
     </div>
