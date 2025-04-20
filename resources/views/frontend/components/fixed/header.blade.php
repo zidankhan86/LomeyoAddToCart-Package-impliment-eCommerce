@@ -84,6 +84,11 @@
                 </a>
                 @endguest
 
+                @auth
+                <b>{{ Str::limit(auth()->user()->name, 12) }}</b>
+
+                @endauth
+
             </div>
 
 
