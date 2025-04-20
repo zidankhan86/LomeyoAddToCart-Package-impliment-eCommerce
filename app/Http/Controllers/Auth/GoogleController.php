@@ -28,7 +28,7 @@ class GoogleController extends Controller
 
     public function handleGoogleCallback()
     {
-        // try {
+        try {
             $googleUser = Socialite::driver('google')->user();
 
             // Validate required fields
@@ -68,11 +68,11 @@ class GoogleController extends Controller
 
             return redirect()->intended('/'); // Use intended for safer redirects
 
-        // } catch (Exception $e) {
+        } catch (Exception $e) {
 
             return redirect()->route('login')->withErrors([
                 'google' => 'Failed to login with Google. Please try again or use another method.'
             ]);
         }
-    // }
+    }
 }
