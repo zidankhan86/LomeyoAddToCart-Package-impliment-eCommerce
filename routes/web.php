@@ -17,6 +17,7 @@ use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\RolePermissionController;
+use App\Http\Controllers\frontend\BannerController;
 use App\Http\Controllers\frontend\HomeController as FrontendHomeController;
 use App\Http\Controllers\frontend\OrderController as FrontendOrderController;
 
@@ -84,6 +85,8 @@ Route::get('/app',[HomeController::class,'index'])->name('app');
 Route::get('/custom/page', [CustomPageController::class,'index'])->name('custom.page.index');
 Route::get('/edit/{id}', [CustomPageController::class,'edit'])->name('custom.page.edit');
 Route::post('/update/{id}', [CustomPageController::class,'update'])->name('custom.page.update');
+
+Route::get('/banner/click', [BannerController::class, 'click'])->name('banner.click');
 
 Route::prefix('category')->name('category.')->group(function () {
     Route::get('/index', [CategoryController::class, 'index'])->name('index');

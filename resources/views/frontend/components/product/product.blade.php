@@ -2,7 +2,7 @@
     <div class="container px-4 px-lg-5 mt-2">
         <!-- Ad Banner -->
         <div class="mb-5 text-center">
-            <a href="#">
+            <a href="{{route('banner.click')}}">
                 <img src="{{ asset('image.png') }}" alt="Ad Banner" class="img-fluid rounded shadow-sm"
                     style="max-height: 300px;">
             </a>

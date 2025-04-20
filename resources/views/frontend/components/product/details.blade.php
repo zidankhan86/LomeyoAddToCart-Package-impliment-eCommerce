@@ -49,14 +49,7 @@
                 <span class="h4 me-2">BDT {{$product->price}}</span>
                 <span class="text-muted"><s>$399.99</s></span>
             </div>
-            <div class="mb-3">
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-half text-warning"></i>
-                <span class="ms-2">4.5 (120 reviews)</span>
-            </div>
+
             <p class="mb-4">
                 {{nl2br($product->description)}}
             </p>
