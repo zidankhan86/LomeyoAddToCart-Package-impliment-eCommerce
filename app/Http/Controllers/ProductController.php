@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\ProductSize;
 use Illuminate\Support\Str;
 use App\Models\ImageGallery;
+use App\Models\ProductColor;
 use Illuminate\Http\Request;
+use App\Models\ProductVariant;
 
 class ProductController extends Controller
 {
@@ -25,6 +28,55 @@ class ProductController extends Controller
         return view('backend.product.index', $data);
      }
 
+    // public function store(Request $request)
+    // {
+    //     $request->validate([
+    //         'name' => 'required|max:255',
+    //         'price' => 'required|numeric',
+    //         'image' => 'required|image|mimes:jpeg,png,jpg,gif',
+    //         'description' => 'required',
+    //         'status'=>'required',
+    //         'is_popular' =>'required'
+    //     ]);
+
+    //     $imageName = null;
+    //     if ($request->hasFile('image')) {
+    //         $imageName = date('YmdHis') . '.' . $request->file('image')->getClientOriginalExtension();
+    //         $request->file('image')->storeAs('uploads', $imageName, 'public');
+    //     }
+
+    //     // Create a new Product instance
+    //     $product = new Product;
+    //     $product->name = $request->name;
+    //     $product->category_id = $request->category_id;
+    //     $product->slug = Str::slug($request->name);
+    //     $product->price = $request->price;
+    //     $product->image = '/public/uploads/' .$imageName;
+    //     $product->description = $request->description;
+    //     $product->is_popular = $request->is_popular;
+    //     $product->status = $request->status;
+
+    //     $product->save();
+
+    //     if ($request->hasFile('images')) {
+    //         foreach ($request->file('images') as $file) {
+    //             if ($file->isValid()) {
+    //                 $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+    //                 $filePath = $file->storeAs('uploads', $filename, 'public');
+    //                 ImageGallery::create([
+    //                     'product_id' => $product->id,
+    //                     'images' => '/public/uploads/' . $filename,
+    //                 ]);
+    //             }
+    //         }
+    //     }
+
+    //     return redirect()->route('product.index')->with('success', 'Product created successfully');
+
+    // }
+
+
+
     public function store(Request $request)
     {
         $request->validate([
@@ -32,8 +84,8 @@ class ProductController extends Controller
             'price' => 'required|numeric',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif',
             'description' => 'required',
-            'status'=>'required',
-            'is_popular' =>'required'
+            'status' => 'required',
+            'is_popular' => 'required',
         ]);
 
         $imageName = null;
@@ -42,24 +94,23 @@ class ProductController extends Controller
             $request->file('image')->storeAs('uploads', $imageName, 'public');
         }
 
-        // Create a new Product instance
         $product = new Product;
         $product->name = $request->name;
         $product->category_id = $request->category_id;
         $product->slug = Str::slug($request->name);
         $product->price = $request->price;
-        $product->image = '/public/uploads/' .$imageName;
+        $product->image = '/public/uploads/' . $imageName;
         $product->description = $request->description;
         $product->is_popular = $request->is_popular;
         $product->status = $request->status;
-
         $product->save();
 
+        // ✅ Save image gallery
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $file) {
                 if ($file->isValid()) {
                     $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-                    $filePath = $file->storeAs('uploads', $filename, 'public');
+                    $file->storeAs('uploads', $filename, 'public');
                     ImageGallery::create([
                         'product_id' => $product->id,
                         'images' => '/public/uploads/' . $filename,
@@ -68,9 +119,33 @@ class ProductController extends Controller
             }
         }
 
-        return redirect()->route('product.index')->with('success', 'Product created successfully');
+        // ✅ Save Variants with color and size IDs
+        if ($request->has('variants')) {
+            foreach ($request->variants as $variant) {
+                // Find or create the color
+                $color = ProductColor::firstOrCreate(
+                    ['product_id' => $product->id, 'color' => $variant['color']]
+                );
 
+                // Find or create the size
+                $size = ProductSize::firstOrCreate(
+                    ['size' => $variant['size']]
+                );
+
+                // Create the product variant
+                ProductVariant::create([
+                    'product_id' => $product->id,
+                    'product_color_id' => $color->id,
+                    'product_size_id' => $size->id,
+                    'stock' => $variant['stock'],
+                ]);
+            }
+        }
+
+        return redirect()->route('product.index')->with('success', 'Product created successfully');
     }
+
+
 
     /**
      * Display the specified resource.
