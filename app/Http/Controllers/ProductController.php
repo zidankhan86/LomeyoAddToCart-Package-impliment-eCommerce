@@ -162,6 +162,7 @@ class ProductController extends Controller
     {
         $data['product'] = Product::find($id);
         $data['categories'] =Category::get();
+        $data['variants'] = ProductVariant::get();
         return view('backend.product.edit', $data);
     }
 

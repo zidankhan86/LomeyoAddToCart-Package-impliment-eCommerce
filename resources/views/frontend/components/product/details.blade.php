@@ -55,25 +55,54 @@
             </p>
             <div class="mb-4">
                 <h5>Color:</h5>
-                <div class="btn-group" role="group" aria-label="Color selection">
-                    <input type="radio" class="btn-check" name="color" id="black" autocomplete="off" checked>
-                    <label class="btn btn-outline-dark" for="black">Black</label>
-                    <input type="radio" class="btn-check" name="color" id="silver" autocomplete="off">
-                    <label class="btn btn-outline-secondary" for="silver">Silver</label>
-                    <input type="radio" class="btn-check" name="color" id="blue" autocomplete="off">
-                    <label class="btn btn-outline-primary" for="blue">Blue</label>
+                <div class="row g-2">
+                    @foreach($product->colors as $color)
+                        <div class="col-4 col-md-2">
+                            <input type="radio" class="btn-check" name="color" id="color_{{ $color->id }}" autocomplete="off" {{ $loop->first ? 'checked' : '' }}>
+                            <label class="btn d-flex align-items-center justify-content-center"
+                                   for="color_{{ $color->id }}"
+                                   style="background-color: {{ $color->color_code }}; height: 50px; border-radius: 5px;
+                                          border: 2px solid black; color: black; font-weight: bold; text-transform: uppercase;
+                                          transition: all 0.3s ease-in-out; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);">
+                                {{ $color->color }}
+                            </label>
+                        </div>
+                    @endforeach
                 </div>
             </div>
+
+
             <div class="mb-4">
-                <label for="quantity" class="form-label">Quantity:</label>
-                <input type="number" class="form-control" id="quantity" value="1" min="1" style="width: 80px;">
+                <label for="quantity" class="form-label">Variants Available:</label>
+                <div class="d-flex flex-column">
+                    @foreach($product->variants as $variant)
+                        @php
+                            // Assuming the color is stored as a JSON string, decode it
+                            $colorData = json_decode($variant->color);
+                        @endphp
+                        <!-- Display Variant Color and Stock -->
+                        <div class="d-flex justify-content-between align-items-center mb-2 border p-2 rounded">
+                            <div>
+                                <strong>{{ $colorData->color ?? $variant->color }}</strong>
+                            </div>
+                            <div class="text-muted">
+                                Stock: <span class="badge bg-primary">{{ $variant->stock }}</span>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
             </div>
-            <button class="btn btn-primary btn-lg mb-3 me-2">
-                    <i class="bi bi-cart-plus"></i> Add to Cart
-                </button>
-            <button class="btn btn-outline-secondary btn-lg mb-3">
+
+
+
+
+            <a class="btn btn-dark btn-sm flex-grow-1 me-2"
+            href="{{ route('cart.add', $product->id) }}">
+            <i class="bi bi-cart-check-fill"></i> Add TO CART
+        </a><br><br>
+            {{-- <button class="btn btn-outline-secondary btn-lg mb-3">
                     <i class="bi bi-heart"></i> Add to Wishlist
-                </button>
+                </button> --}}
 
         </div>
     </div>

@@ -87,13 +87,19 @@
                         @foreach($product->variants as $index => $variant)
                             <div class="row variant-group g-3 mb-3">
                                 <div class="col-md-3">
-                                    <input type="text" name="variants[{{ $index }}][color]" class="form-control" value="{{ old('variants.' . $index . '.color', $variant->color) }}" placeholder="Color (e.g. Red)" required>
+                                    <input type="text" name="variants[{{ $index }}][color]" class="form-control"
+                                           value="{{ old('variants.' . $index . '.color', $variant->color) }}"
+                                           placeholder="Color (e.g. Red)" required>
                                 </div>
                                 <div class="col-md-3">
-                                    <input type="text" name="variants[{{ $index }}][size]" class="form-control" value="{{ old('variants.' . $index . '.size', $variant->size) }}" placeholder="Size (e.g. M)" required>
+                                    <input type="text" name="variants[{{ $index }}][size]" class="form-control"
+                                           value="{{ old('variants.' . $index . '.size', $variant->size) }}"
+                                           placeholder="Size (e.g. M)" required>
                                 </div>
                                 <div class="col-md-3">
-                                    <input type="number" name="variants[{{ $index }}][stock]" class="form-control" value="{{ old('variants.' . $index . '.stock', $variant->stock) }}" placeholder="Stock" min="0" required>
+                                    <input type="number" name="variants[{{ $index }}][stock]" class="form-control"
+                                           value="{{ old('variants.' . $index . '.stock', $variant->stock) }}"
+                                           placeholder="Stock" min="0" required>
                                 </div>
                                 <div class="col-md-3">
                                     <button type="button" class="btn btn-outline-danger w-100 remove-variant">Remove</button>

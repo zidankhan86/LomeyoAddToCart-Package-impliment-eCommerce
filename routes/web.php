@@ -63,30 +63,34 @@ Route::get('auth/github', [GithubController::class,'redirect'] )->name('github.l
 Route::get('auth/github/callback', [GithubController::class,'callback'] );
 
 
-//Backend
+//Frontend
+Route::group(['middleware' => ['auth', 'customer']], function () {
 Route::post('/success', [FrontendOrderController::class, 'success'])->name('sslcommerz.success');
 Route::post('/fail', [FrontendOrderController::class, 'fail'])->name('fail');
 Route::post('/cancel', [FrontendOrderController::class, 'cancel'])->name('cancel');
-//Middleware
-Route::group(['middleware'=>'auth'],function(){
-
-    Route::get('/add-to-cart/{product}', [CartController::class, 'addToCart'])->name('cart.add');
-    Route::get('/cart', [CartController::class, 'showCart'])->name('cart.show');
-    Route::patch('/cart/update/{productId}', [CartController::class, 'updateCart'])->name('cart.update');
-    Route::get('/remove-from-cart/{product}', [CartController::class, 'removeFromCart'])->name('cart.remove');
-    Route::get('/clear-cart', [CartController::class, 'clearCart'])->name('cart.clear');
-    Route::get('/checkout', [FrontendOrderController::class, 'checkout'])->name('checkout');
-    Route::post('/checkout/process', [FrontendOrderController::class, 'processOrder'])->name('checkout.process');
-
-    Route::get('/order/index', [OrderController::class, 'index'])->name('order.index');
-//Pages
-Route::get('/app',[HomeController::class,'index'])->name('app');
-
-Route::get('/custom/page', [CustomPageController::class,'index'])->name('custom.page.index');
-Route::get('/edit/{id}', [CustomPageController::class,'edit'])->name('custom.page.edit');
-Route::post('/update/{id}', [CustomPageController::class,'update'])->name('custom.page.update');
-
+Route::get('/add-to-cart/{product}', [CartController::class, 'addToCart'])->name('cart.add');
+Route::get('/cart', [CartController::class, 'showCart'])->name('cart.show');
+Route::patch('/cart/update/{productId}', [CartController::class, 'updateCart'])->name('cart.update');
+Route::get('/remove-from-cart/{product}', [CartController::class, 'removeFromCart'])->name('cart.remove');
+Route::get('/clear-cart', [CartController::class, 'clearCart'])->name('cart.clear');
+Route::get('/checkout', [FrontendOrderController::class, 'checkout'])->name('checkout');
+Route::post('/checkout/process', [FrontendOrderController::class, 'processOrder'])->name('checkout.process');
 Route::get('/banner/click', [BannerController::class, 'click'])->name('banner.click');
+Route::get('/order/index', [OrderController::class, 'index'])->name('order.index');
+});
+
+//Middleware
+Route::group(['middleware' => ['auth', 'admin']], function () {
+//Pages
+Route::get('/admin',[HomeController::class,'index'])->name('dashboard');
+
+Route::prefix('custom')->name('custom.')->group(function () {
+Route::get('/page', [CustomPageController::class,'index'])->name('page.index');
+Route::get('/edit/{id}', [CustomPageController::class,'edit'])->name('page.edit');
+Route::post('/update/{id}', [CustomPageController::class,'update'])->name('page.update');
+});
+
+
 
 Route::prefix('category')->name('category.')->group(function () {
     Route::get('/index', [CategoryController::class, 'index'])->name('index');

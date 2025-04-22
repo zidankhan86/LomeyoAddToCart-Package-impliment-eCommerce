@@ -17,7 +17,6 @@ class GoogleController extends Controller
         try {
             return Socialite::driver('google')
                 ->scopes(['openid', 'profile', 'email'])  // Explicitly request necessary scopes
-                ->with(['hd' => 'example.com'])  // Optional: restrict to specific domain
                 ->redirect();
         } catch (Exception $e) {
             return redirect()->route('login')->withErrors([
@@ -46,14 +45,14 @@ class GoogleController extends Controller
                     'avatar' => $googleUser->getAvatar(),
                     'email_verified_at' => now(),
                     'password' => bcrypt(Str::random(24)), // Secure random password
-                    'role'=>'admin',
+                    'role'=>'customer',
                 ]);
             } else {
                 $updateData = [
                     'google_id' => $googleUser->getId(),
                     'avatar' => $googleUser->getAvatar(),
                     'name' => $googleUser->getName() ?? $user->name,
-                    'role'=>'admin',
+                    'role'=>'customer',
                 ];
 
                 // Only update role if not already set

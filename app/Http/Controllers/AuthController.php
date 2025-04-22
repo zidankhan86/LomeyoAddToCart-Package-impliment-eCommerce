@@ -15,17 +15,7 @@ class AuthController extends Controller
         return view('backend.components.auth.login');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         //dd($request->all());
@@ -39,44 +29,14 @@ class AuthController extends Controller
             if (auth()->user()->role == 'customer') {
                 return redirect()->route('home');
             } elseif (auth()->user()->role == 'admin') {
-                return redirect()->route('app')->withSuccess('Login Success');
+                return redirect()->route('dashboard')->withSuccess('Login Success');
             }
         } else {
             return redirect()->back()->withErrors(['error' => 'Invalid credentials. Please try again.']);
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-       //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
 
     public function list()
     {
