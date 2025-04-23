@@ -42,4 +42,9 @@ class AuthController extends Controller
     {
         return view('backend.pages.userList');
     }
+
+    public function logoutUser(){
+        Auth::logout();
+        return redirect('/')->withSuccess('Logout Success');
+     }
 }

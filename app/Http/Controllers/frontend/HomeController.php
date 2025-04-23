@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\frontend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -11,13 +12,37 @@ class HomeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    // public function index()
+    // {
+
+    //     $products = Product::where('status','active')->get();
+    //     $categories = Category::latest()->take(12)->get();
+    //     return view('frontend.pages.home',compact('products','categories'));
+    // }
+
+    public function index(Request $request)
     {
+        $categories = Category::latest()->take(10)->get();
 
-        $products = Product::where('status','active')->get();
+        // Check if a category filter is applied via slug
+        if ($request->has('category')) {
+            $selectedCategory = Category::where('slug', $request->category)->first();
 
-        return view('frontend.pages.home',compact('products'));
+            if ($selectedCategory) {
+                $products = Product::where('category_id', $selectedCategory->id)
+                                   ->where('status', 'active')
+                                   ->get();
+            } else {
+                $products = collect(); // Empty collection if invalid category
+            }
+        } else {
+            $products = Product::where('status', 'active')->get(); // Show all products when no filter
+        }
+
+        return view('frontend.pages.home', compact('products', 'categories'));
     }
+
+
 
     public function product(Request $request)
     {

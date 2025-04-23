@@ -1,5 +1,6 @@
 @stack('styles')
  <!-- CSS files -->
+ <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
  <link href="{{asset ('./dist/css/tabler.min.css?1684106062') }}" rel="stylesheet"/>
  <link href="{{asset ('./dist/css/tabler-flags.min.css?1684106062') }}" rel="stylesheet"/>
  <link href="{{asset ('./dist/css/tabler-payments.min.css?1684106062') }}" rel="stylesheet"/>
@@ -15,4 +16,4 @@
    }
  </style>
 
- 
+

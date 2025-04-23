@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name')->unique(); // Name column (unique)
             $table->string('slug')->unique(); // Slug for SEO
             $table->boolean('status')->default(1);
+            $table->string('icon');
             $table->timestamps();
         });
     }

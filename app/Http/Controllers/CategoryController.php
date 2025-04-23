@@ -28,6 +28,7 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
 {
+    // dd($request->all());
     $request->validate([
         'name' => 'required|string|max:255|unique:categories,name',
         'status' => 'required|boolean',
@@ -37,6 +38,7 @@ class CategoryController extends Controller
     $category->name = $request->name;
     $category->slug = Str::slug($request->name);
     $category->status = $request->status;
+    $category->icon  = $request->icon;
     $category->save();
 
     return redirect()->route('category.index')->with('success', 'Category created successfully!');
@@ -66,6 +68,7 @@ public function update(Request $request, $id)
     $category->name = $request->name;
     $category->slug = Str::slug($request->name);
     $category->status = $request->status;
+    $category->icon  = $request->icon;
     $category->save();
 
     return redirect()->route('category.index')->with('success', 'Category updated successfully!');

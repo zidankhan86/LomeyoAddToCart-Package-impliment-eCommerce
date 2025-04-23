@@ -1,17 +1,148 @@
+@push('styles')
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    .categories-section {
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .categories-section h2 {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    .categories-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .category-card {
+        width: 120px;
+        text-align: center;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+
+    .category-card img {
+        width: 80px;
+        height: 80px;
+        object-fit: contain;
+    }
+
+    .category-card p {
+        margin: 10px 0 0;
+        font-size: 14px;
+        color: #e63946;
+    }
+</style>
+
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    .categories-section {
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .categories-section h2 {
+        font-size: 12px;
+        margin-bottom: 10px;
+    }
+
+    .categories-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        justify-content: space-between;
+    }
+
+    .category-card {
+        width: 16%;
+        /* Ensures that 6 items fit side by side */
+        text-align: center;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 10px;
+        box-sizing: border-box;
+        transition: transform 0.3s ease;
+    }
+
+    .category-card:hover {
+        transform: scale(1.05);
+    }
+
+    .category-card i {
+        font-size: 1.4rem;
+        /* Smaller icon size */
+        margin-bottom: 6px;
+    }
+
+    .category-card p {
+        margin-top: 6px;
+        font-size: 12px;
+        color: #e63946;
+    }
+
+    /* Responsive grid */
+    @media (max-width: 300px) {
+        .category-card {
+            width: 38%;
+            /* Stack the cards on small screens */
+        }
+    }
+
+    @media (max-width: 350px) {
+        .category-card {
+            width: 30%;
+            /* Adjust to 3 cards per row on medium screens */
+        }
+    }
+</style>
+
+
+@endpush
+
+
+<div class="mb-5 text-center">
+    <section class="categories-section">
+        <h1 class="text-center mb-4">Popular Categories</h1>
+        <div class="categories-grid">
+            @forelse ($categories as $category)
+            <div class="category-card">
+                <a href="{{ route('home', ['category' => $category->slug]) }}" class="text-decoration-none">
+                    <i class="{{ $category->icon }} fs-1 text-dark"></i>
+                    <p class="mt-2" style="color: black">{{ Str::limit($category->name, 15) }}</p>
+                </a>
+
+            </div>
+            @empty
+            <h3 class="text-center">No Category Found</h3>
+            @endforelse
+        </div>
+    </section>
+</div>
+
+<!-- Ad Banner -->
+<div class="mb-5 text-center">
+    <a href="{{route('banner.click')}}">
+        <img src="{{ asset('image.png') }}" alt="Ad Banner" class="img-fluid rounded shadow-sm"
+            style="max-height: 300px;">
+    </a>
+</div>
 <section class="py-5">
     <div class="container px-4 px-lg-5 mt-2">
-        <!-- Ad Banner -->
-        <div class="mb-5 text-center">
-            <a href="{{route('banner.click')}}">
-                <img src="{{ asset('image.png') }}" alt="Ad Banner" class="img-fluid rounded shadow-sm"
-                    style="max-height: 300px;">
-            </a>
-        </div>
-
-
         <h2 class="text-center fw-bold mb-4">Our Products</h2>
-
-
         <!-- Search Bar -->
         <div class="mb-4">
             <form method="GET" action="{{ route('product.page') }}" class="d-flex justify-content-center">
@@ -26,7 +157,7 @@
 
         <!-- Product Grid -->
         <div class="row gx-4 gx-lg-5 mt-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-            @foreach ($products as $item)
+            @forelse ($products as $item)
             <div class="col mb-5">
                 <div class="card h-100 shadow-sm border-0">
                     <!-- Product image-->
@@ -69,7 +200,9 @@
                     </div>
                 </div>
             </div>
-            @endforeach
+            @empty
+            <h3 class="text-center text-danger">No Data Found</h3>
+            @endforelse
         </div>
 
 
@@ -105,64 +238,7 @@
     </div>
 </div>
 
-@push('styles')
-<style>
-    .product-image-container {
-        overflow: hidden;
-        position: relative;
-    }
 
-    .product-image-container img {
-        transition: transform 0.3s ease, opacity 0.3s ease;
-        max-height: 250px;
-        object-fit: cover;
-    }
-
-    .product-image-container:hover img {
-        transform: scale(1.1);
-        opacity: 0.9;
-    }
-
-    .card {
-        transition: box-shadow 0.3s ease;
-    }
-
-    .card:hover {
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    }
-
-    .btn-dark {
-        background-color: #333;
-        border-color: #333;
-    }
-
-    .btn-dark:hover {
-        background-color: #555;
-        border-color: #555;
-    }
-
-    .text-truncate {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .form-control {
-        border: 1px solid #ccc;
-        border-radius: 30px;
-        padding: 10px 20px;
-    }
-
-    .form-control:focus {
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-        border-color: #333;
-    }
-
-    .btn-dark {
-        border-radius: 30px;
-    }
-</style>
-@endpush
 
 
 @push('scripts')

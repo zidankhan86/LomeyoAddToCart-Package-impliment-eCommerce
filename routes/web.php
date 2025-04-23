@@ -54,7 +54,7 @@ Route::get('/login',[AuthController::class,'index'])->name('login');
 Route::post('/store',[AuthController::class,'store'])->name('store');
 Route::get('/registration',[RegistrationController::class,'index'])->name('registration');
 Route::post('/registration/store',[RegistrationController::class,'store'])->name('registration.store');
-
+Route::get('/admin/logout',[AuthController::class,'logoutUser'])->name('user.logout');
 // Google OAuth Routes
 Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');
 Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback'])->name('google.callback');
@@ -65,6 +65,7 @@ Route::get('auth/github/callback', [GithubController::class,'callback'] );
 
 //Frontend
 Route::group(['middleware' => ['auth', 'customer']], function () {
+
 Route::post('/success', [FrontendOrderController::class, 'success'])->name('sslcommerz.success');
 Route::post('/fail', [FrontendOrderController::class, 'fail'])->name('fail');
 Route::post('/cancel', [FrontendOrderController::class, 'cancel'])->name('cancel');

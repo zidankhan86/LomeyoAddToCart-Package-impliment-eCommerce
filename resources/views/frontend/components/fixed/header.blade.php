@@ -76,7 +76,7 @@
 
 
 
-     <!-- Login Button -->
+                <!-- Login Button -->
                 @guest
                 <a href="{{ route('login') }}" class="btn btn-white text-dark rounded-pill px-3"
                     style="background-color: #ffffff; border: 1px solid #fff;">
@@ -84,8 +84,11 @@
                 </a>
                 @endguest
 
-                @auth
-                <b>{{ Str::limit(auth()->user()->name, 12) }}</b>
+                 @auth
+                {{ Str::limit(auth()->user()->name, 12) }}
+
+                <a href="{{route('user.logout')}}" class="btn btn-danger">Logout</a>
+
 
                 @endauth
 
