@@ -55,7 +55,8 @@ class HomeController extends Controller
         } else {
             $products = Product::where('status','active')->get();
         }
-        return view('frontend.pages.product', compact('products', 'query'));
+        $categories = Category::latest()->take(10)->get();
+        return view('frontend.pages.product', compact('products', 'query','categories'));
     }
 
     /**

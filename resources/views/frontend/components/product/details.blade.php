@@ -47,7 +47,7 @@
             <p class="text-muted mb-4">SKU: WH1000XM4</p>
             <div class="mb-3">
                 <span class="h4 me-2">BDT {{$product->price}}</span>
-                <span class="text-muted"><s>$399.99</s></span>
+                <span class="text-muted"><s>BDT 399.99</s></span>
             </div>
 
             <p class="mb-4">

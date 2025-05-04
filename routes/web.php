@@ -65,6 +65,13 @@ Route::get('auth/github/callback', [GithubController::class,'callback'] );
 
 //Frontend
 Route::group(['middleware' => ['auth', 'customer']], function () {
+    Route::get('/checkout/process', [FrontendOrderController::class, 'processPaypalPayment'])->name('processPaypalPayment');
+Route::get('/paypal/success', [FrontendOrderController::class, 'paypalSuccess'])->name('paypal.success');
+Route::get('/paypal/cancel', [FrontendOrderController::class, 'paypalCancel'])->name('paypal.cancel');
+
+Route::post('/stripe-purchase', [FrontendOrderController::class, 'processStripePayment'])->name('purchase');
+Route::get('/payment-success', [FrontendOrderController::class, 'StripeSuccess'])->name('stripe.success');
+Route::get('/payment-cancel', [FrontendOrderController::class, 'index'])->name('stripe.cancel');
 
 Route::post('/success', [FrontendOrderController::class, 'success'])->name('sslcommerz.success');
 Route::post('/fail', [FrontendOrderController::class, 'fail'])->name('fail');
@@ -114,13 +121,7 @@ Route::prefix('product')->name('product.')->group(function () {
 });
 
 
-Route::get('/checkout/process', [FrontendOrderController::class, 'processPaypalPayment'])->name('processPaypalPayment');
-Route::get('/paypal/success', [FrontendOrderController::class, 'paypalSuccess'])->name('paypal.success');
-Route::get('/paypal/cancel', [FrontendOrderController::class, 'paypalCancel'])->name('paypal.cancel');
 
-Route::post('/stripe-purchase', [FrontendOrderController::class, 'processStripePayment'])->name('purchase');
-Route::get('/payment-success', [FrontendOrderController::class, 'StripeSuccess'])->name('stripe.success');
-Route::get('/payment-cancel', [FrontendOrderController::class, 'index'])->name('stripe.cancel');
 
 
 

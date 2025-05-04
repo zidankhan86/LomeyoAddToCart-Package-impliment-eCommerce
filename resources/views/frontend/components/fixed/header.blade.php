@@ -78,17 +78,20 @@
 
                 <!-- Login Button -->
                 @guest
-                <a href="{{ route('login') }}" class="btn btn-white text-dark rounded-pill px-3"
+                <a href="{{ route('login') }}" class="btn btn-white text-dark rounded-pill px-3 me-2"
                     style="background-color: #ffffff; border: 1px solid #fff;">
                     <i class="bi bi-box-arrow-in-right me-1"></i> Login
                 </a>
                 @endguest
 
                  @auth
-                {{ Str::limit(auth()->user()->name, 12) }}
 
-                <a href="{{route('user.logout')}}" class="btn btn-danger">Logout</a>
+<p></p>
+                {{-- <strong class="text-success">Active as {{auth()->user()->name}}</strong> --}}
 
+                <a href="{{route('user.logout')}}" class="btn btn-danger" title="Logout">
+                    <i class="fas fa-sign-out-alt"></i> <strong>Logout</strong>
+                </a>
 
                 @endauth
 
@@ -98,3 +101,4 @@
         </div>
     </div>
 </nav>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">

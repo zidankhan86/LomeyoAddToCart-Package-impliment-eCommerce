@@ -38,7 +38,7 @@
                 <div class="col-md-6">
                     <label class="form-label fw-semibold">Thumbnail Image</label>
                     <input type="file" name="image" class="form-control" accept="image/*">
-                    <small class="text-muted">JPEG, PNG formats recommended. Current: <img src="{{ asset('storage/' . $product->image) }}" style="max-width: 100px;" alt="Product Thumbnail"></small>
+                    <small class="text-muted">JPEG, PNG formats recommended. Current: <img src="{{ asset('public/uploads/' . $product->image) }}" style="max-width: 100px;" alt="Product Thumbnail"></small>
                 </div>
 
                 <!-- Product Images -->
@@ -47,8 +47,8 @@
                     <input type="file" name="images[]" class="form-control" accept="image/*" multiple>
                     <small class="text-muted">You can upload multiple images.</small>
                     <div class="mt-2">
-                        @foreach($product->images as $image)
-                            <img src="{{ asset('storage/' . $image) }}" style="max-width: 100px; margin-right: 5px;" alt="Product Image">
+                        @foreach($product->images as $images)
+                            <img src="{{ asset($images->images) }}" style="max-width: 100px; margin-right: 5px;" alt="Product Image">
                         @endforeach
                     </div>
                 </div>
